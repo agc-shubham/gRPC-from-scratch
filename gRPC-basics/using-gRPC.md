@@ -1,0 +1,196 @@
+# Using gRPC
+
+## Introduction to gRPC and Protobuf
+
+[video](https://www.youtube.com/watch?v=jlcAvo3SG7E)
+
+### What is gRPC?
+
+* A message passing technique developed by Google in 2015.
+* gRPC stands for g Remote Procedure Calls* where the g stands for something different in every release of gRPC. For example, the g in gRPC 1.12 stands for glorious.
+* Programming-language agnostic
+* Seeing greater traction and adoption in the industry.
+* Compared to REST, gRPC provides greater performance at the expense of less flexibility.
+* Clients that call gRPC can treat it as a method call in their own application by stubbing the gRPC service.
+* Does not require an HTTP library to make an API request because the application code can call a method that is "hooked up" to a gRPC service internally.
+
+### gRPC is Fast!
+
+1. Leverages HTTP/2 for transporting messages
+2. Transports binary data
+3. Uses protocol buffers (protobufs) for efficiently transporting structured data
+
+### HTTP/2
+
+* gRPC takes advantage of the HTTP/2 protocol.
+* There are changes introduced in HTTP/2 that improve the overall security and performance of the web.
+* We need to acknowledge the fact that by using HTTP/2, gRPC can significantly improve its performance with regards to response sizes and overhead of connections.
+
+For more details on HTTP/2, I encourage you to visit the Additional Reading section below.
+
+**Message Sizes**
+
+* Messages are transmitted as binary data.
+* This reduces the overall size of the payload and thereby improving the request and response times.
+
+**Connections Overhead**
+
+* Traditionally, an HTTP request could end up creating more HTTP requests that are blocking in nature.
+* HTTP/2 helps reduce this overhead and make more efficient use of resources by multiplexing its data with a unique connection between the client and server.
+
+### **Protocol Buffers**
+
+* A Protocol buffer, also known as a protobuf, is another way to serialize messages. We can think of it as an alternative to JSON or YAML with its set of tradeoffs.
+* gRPC uses protobufs to pass its messages.
+* Protobuf messages are designed to be backward and forwards compatible.
+* Clients that are processing a message expecting an older or newer version of the message will simply ignore fields they don't recognize.
+
+**Structured Data**
+
+* Using protocol buffers helps us clearly define and lock down our interfaces to provide type safety and less confusion.
+
+**Analogy**
+
+We can think of using a `dict` versus using a `class` in Python:
+
+1. The `dict` is flexible but doesn't have enforcement on what values go into it. A client reading a `dict` may run into `KeyErrorException` errors from trying to read bad data.
+2. A `class` defines which fields are used and sets up a straightforward interface. `dict` 's are very flexible and allow us to be more efficient at the expense of safety.
+
+A `dict` is similar to using REST while a `class` is similar to using gRPC.
+
+### Protobuf Messages
+
+[video](https://www.youtube.com/watch?v=uALaj2BdtXI)
+
+When we create a protobuf message, we are defining the format of the message.
+### Protobuf vs. JSON
+
+Protobuf messages define what an item must be. `JSON` defines what an item should be.
+
+* Protobuf - breaks if schema is modified and is strictly typed
+* JSON - schema can be modified and typing is not enforced
+
+**Protobuf message**
+```protobuf
+message Item {
+  string name = 1;
+  string brand_name = 2;
+  int32 id = 3;
+  float weight = 4;
+}
+```
+The message defines the fields for the `Item` field.
+
+1. Each field has a type associated with it.
+2. The integers at the end of each field are not values but are assignments used to declare field numbers. These are crucial in helping protobuf handle binary blobs of data.
+
+Note that you may see some examples in other sources use `required` and `optional` for the fields in their messages. Those were removed in the `proto3` version.
+
+**JSON message**
+```json
+{
+    "id": <item_id: string>,
+    "brand_name": <string>,
+    "name": <string>,
+    "weight": <float>,
+}
+```
+**Binary Data**
+
+* Protobufs are designed to be serialized into binary blobs, making it very efficient to transport our data "over the wire" through a network.
+* Compared to human-readable formats like JSON: these binary messages can't be read without first being decoded and we can't simply craft a binary message in our text editors.
+
+**Message Size**
+
+Binary data also helps reduce the size of messages. Data is stored in a way that is efficient for machines to process but unreadable for humans.
+
+* Message size matters in response times for APIs.
+* A message that's 50 bytes will respond much faster than a message that is 50 Mb in size. In the context of an API that is processing thousands of requests per second, the effects of message size can add up!
+
+### **Protobuf Service**
+
+* Unlike REST, we also define how our API messages are used in gRPC.
+* Protobuf services define our input and outputs of our services.
+```protobuf
+Service ItemService {
+    rpc Create(ItemMessage) returns (ItemMessage)
+}
+```
+In the example above, we declare that an `ItemService` has a method that accepts an `ItemMessage` and returns an `ItemMessage`
+
+* Sets strict interface on how a user is expected to interact with the service.
+* No logic needs to be implemented; we simply define how a user will interact with ItemService
+
+### Using gRPC
+
+[video](https://www.youtube.com/watch?v=QVn90Ju0z7k)
+
+By using binary data, Protobuf messages passed in gRPC are significantly smaller in size than message formats like JSON:
+
+* Binary encodings are efficient and have a small footprint.
+* JSON has a lot of brackets and syntax that increase the size of the payload.
+
+**Decoding**
+
+* Since protobufs are a form of structured data, the binary data can be decoded very quickly. * * Compare this with a format like JSON, which is simply an unstructured string that needs to be parsed into some data structure before it can be properly consumed.
+
+### gRPC vs. REST Overview
+
+* REST has wider adoption
+* gRPC is more structured
+* gRPC is faster out-of-the-box
+
+In general, gRPC provides more speed and structure at the expense of less flexibility and more overhead of setup.
+### Use Cases for gRPC
+
+There are many uses cases for gRPC.
+
+**Need for Speed**
+
+* gRPC boasts better performance than REST, but this doesn't mean that we should default to using gRPC for everything.
+* REST currently has significantly more adoption than gRPC, and REST can be designed to be very performant.
+
+**Microservices**
+
+* Microservices communicate with one another via a network and rely on message passing.
+* Network calls inherently take more time to process than functionality contained in a single network like most monoliths.
+* For internal systems that dictate fast performance, gRPC may be used by modules in a microservice to pass messages with one another.
+
+**Mobile Devices**
+
+* Mobile devices can integrate well with gRPC without an intermediary proxy to the backend service.
+* Applications can invoke function calls directly as if it were local code. To illustrate with Python, the method can accept objects instead of serializing and deserializing a dict object.
+
+### gRPC Protobuf Requirements
+**Basics**
+
+These the minimum requirements for a gRPC protobuf message:
+
+* Typing - type definition such as if a field is a string, float, etc
+* Field Name - the key for the value you are storing data
+* Order Number - used by gRPC for managing binary serialization
+
+**Some Other Features**
+
+These are a few features of protobufs that enrich our message definitions:
+
+* Enum - denotes what values a string can be
+* Nested Type - define a type as a user-defined type such as an enum
+* Default Value - set gRPC to set a default value when none is provided
+
+To learn more about available features, I encourage you to reference the Proto3 Language Guide.
+
+We've gone over how to create protobuf messages. We will learn about how to introduce them into our application code to build clients and servers in the next lesson.
+### New Terms
+|Term	| Definition|
+|--------|-----------|
+|gRPC	|Programming-agnostic way of passing messages as protocol buffers to enforce a strict interface|
+|HTTP/2	|More secure and performant way of making HTTP requests that is backwards compatible|
+|Protocol buffers|	A way to serialize structured data optimizing simplicity and performance|
+
+### Learn More About gRPC
+
+While we went over some concepts on a higher level, the following are some resources if you would like to dive into more detail about them:
+
+* Protobuf
+* HTTP/2
