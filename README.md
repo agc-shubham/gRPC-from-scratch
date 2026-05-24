@@ -321,6 +321,4 @@ service OrderService {
 
 ---
 
-## 📄 License
 
-This project is for educational purposes. The exercises and solution code reference material from [Udacity's cd0309 course](https://github.com/udacity/cd0309-message-passing-exercises).
