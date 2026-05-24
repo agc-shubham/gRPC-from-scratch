@@ -56,13 +56,19 @@ gRPC-from-scratch/
 │   ├── 2.Excercise Using gRPC.md     # Build a gRPC server exercise
 │   └── 3.Solution Using gRPC.md      # Complete solution with server & clients
 │
-└── java-implementation/               # Module 3: Hands-On Java
+├── java-implementation/               # Module 3: Hands-On Java
+│   ├── README.md
+│   ├── 1.Using gRPC.md               # Step-by-step Java implementation guide
+│   ├── 2.Exercise Using gRPC.md      # Build a gRPC server exercise
+│   ├── 3.Solution Using gRPC.md      # Complete solution with server & clients
+│   └── 4.Advanced Multi-Proto Builds  # Multi-proto imports & e-commerce example
+│       with Gradle.md
+│
+└── java-bidirectional-streaming/       # Module 4: Streaming & Bidirectional
     ├── README.md
-    ├── 1.Using gRPC.md               # Step-by-step Java implementation guide
-    ├── 2.Exercise Using gRPC.md      # Build a gRPC server exercise
-    ├── 3.Solution Using gRPC.md      # Complete solution with server & clients
-    └── 4.Advanced Multi-Proto Builds  # Multi-proto imports & e-commerce example
-        with Gradle.md
+    ├── 1.gRPC Streaming Patterns.md   # Theory — all 4 gRPC patterns
+    └── 2.Bidirectional Streaming      # Full implementation — protos, server,
+        Implementation.md              #   client wrappers, demo runner
 ```
 
 ---
@@ -116,6 +122,21 @@ Re-implements the same exercises in Java, showcasing how gRPC's language-agnosti
 | 4 | **Advanced Multi-Proto** | Multiple proto files with imports, shared common types, cross-service references — e-commerce platform example |
 
 **Key takeaway:** Java's compile-time type system + protobuf catches errors **before code runs**. The Builder pattern and `StreamObserver` are Java's idiomatic gRPC patterns. For large projects, proto imports and shared common files keep definitions DRY.
+
+---
+
+### Module 4: Bidirectional Streaming — Advanced Java gRPC
+
+📂 [`java-bidirectional-streaming/`](java-bidirectional-streaming/)
+
+Covers all four gRPC communication patterns with deep focus on **bidirectional streaming**. Includes multi-proto organization, complete server stubs, and clean client wrapper abstractions using a real-time trading platform domain:
+
+| # | Topic | What You'll Learn |
+|---|-------|-------------------|
+| 1 | **Streaming Patterns** | Theory — unary vs server vs client vs bidirectional streaming with sequence diagrams |
+| 2 | **Bidi Implementation** | Complete working code — multi-proto files, Gradle config, server stubs, client wrappers, demo runner |
+
+**Key takeaway:** Bidirectional streaming requires **async stubs**, `StreamObserver` callbacks on both sides, and careful session lifecycle management. Client wrappers abstract this complexity behind clean `Consumer<T>` APIs.
 
 ---
 
@@ -315,9 +336,12 @@ service OrderService {
  9. Exercise: Build a gRPC Server (Java) ──►  java-implementation/2.Exercise Using gRPC.md
 10. Solution: Complete Java Impl.        ──►  java-implementation/3.Solution Using gRPC.md
 11. Advanced: Multi-Proto Builds         ──►  java-implementation/4.Advanced Multi-Proto Builds with Gradle.md
+ ── Streaming Track (Java) ───────────────────────────────────────────────
+12. Streaming Patterns Theory            ──►  java-bidirectional-streaming/1.gRPC Streaming Patterns.md
+13. Bidi Streaming Implementation        ──►  java-bidirectional-streaming/2.Bidirectional Streaming Implementation.md
 ```
 
-> **Tip:** Steps 1–4 are shared theory. Then choose the **Python Track** (5–7), the **Java Track** (8–11), or do both to compare!
+> **Tip:** Steps 1–4 are shared theory. Then choose the **Python Track** (5–7), the **Java Track** (8–13), or do both to compare!
 
 ---
 
