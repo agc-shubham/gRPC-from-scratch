@@ -12,6 +12,7 @@ A comprehensive, self-paced learning resource for understanding and implementing
   - [Module 1: gRPC Basics](#module-1-grpc-basics--theory--concepts)
   - [Module 2: Python Implementation](#module-2-python-implementation--hands-on-with-python)
   - [Module 3: Java Implementation](#module-3-java-implementation--hands-on-with-java)
+  - [Module 4: Java Bidirectional Streaming](#module-4-bidirectional-streaming--advanced-java-grpc)
 - [Getting Started](#-getting-started)
 - [How gRPC Works](#-how-grpc-works)
 - [Key Concepts](#-key-concepts)
